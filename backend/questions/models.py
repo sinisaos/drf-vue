@@ -28,11 +28,15 @@ class Question(models.Model):
         self.slug = slugify(self.title)
         super(Question, self).save(*args, **kwargs)
 
+    def get_answer_count(self):
+        return Question.objects.filter(answers__question=self).count()
+
 
 class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(
-        Question, related_name="answers", on_delete=models.CASCADE)
+        Question, related_name="answers", on_delete=models.CASCADE
+    )
     content = models.TextField()
     likes = models.PositiveIntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)

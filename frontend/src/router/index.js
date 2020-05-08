@@ -6,6 +6,11 @@ import Login from '../components/accounts/Login.vue'
 import Register from '../components/accounts/Register.vue'
 import Dashboard from '../components/accounts/Dashboard.vue'
 import Profile from '../components/accounts/Profile.vue'
+import Questions from '../components/questions/Questions.vue'
+import Question from '../components/questions/Question.vue'
+import CreateQuestion from '../components/questions/CreateQuestion.vue'
+import QuestionsByTag from '../components/questions/QuestionsByTag.vue'
+import Categories from '../components/questions/Categories.vue'
 
 Vue.use(Router)
 
@@ -42,7 +47,35 @@ let router = new Router({
       meta: {
         requiresAuth: true
       }
-    }
+    },
+    {
+      path: '/questions',
+      name: 'questions',
+      component: Questions
+    },
+    {
+      path: '/questions/:id/:slug',
+      name: 'question',
+      component: Question
+    },
+    {
+      path: '/create',
+      name: 'createQuestion',
+      component: CreateQuestion,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/questions/tags/:name',
+      name: 'questionsByTag',
+      component: QuestionsByTag
+    },
+    {
+      path: '/categories',
+      name: 'categories',
+      component: Categories
+    },
   ]
 })
 

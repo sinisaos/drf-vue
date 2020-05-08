@@ -1,3 +1,4 @@
+from django.db.models import Count
 from rest_framework import viewsets
 from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
@@ -37,3 +38,13 @@ class TagListView(generics.ListAPIView):
         return Question.objects.filter(
             tags__slug=self.kwargs.get("slug")
         ).all()
+
+
+class CategoryListView(generics.ListAPIView):
+    serializer_class = TagSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        return Tag.objects.all().annotate(
+            count_tags=Count('taggit_taggeditem_items')
+        )
