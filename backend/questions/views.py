@@ -1,3 +1,36 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from rest_framework import generics
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import filters
+from .serializers import (
+    QuestionSerializer,
+    AnswerSerializer,
+    TagSerializer
+)
+from .models import Question, Answer
+from taggit.models import Tag
 
-# Create your views here.
+
+class QuestionViewSet(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        question = self.get_object()
+        question.views += 1
+        question.save(update_fields=("views", ))
+        return super().retrieve(request, *args, **kwargs)
+
+
+class AnswerViewSet(viewsets.ModelViewSet):
+    queryset = Answer.objects.all()
+    serializer_class = AnswerSerializer
+
+
+class TagListView(generics.ListAPIView):
+    serializer_class = QuestionSerializer
+
+    def get_queryset(self):
+        return Question.objects.filter(
+            tags__slug=self.kwargs.get("slug")
+        ).all()

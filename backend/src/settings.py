@@ -40,7 +40,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'accounts'
+    'taggit',
+    'taggit_serializer',
+    'accounts',
+    'questions'
 ]
 
 REST_FRAMEWORK = {
