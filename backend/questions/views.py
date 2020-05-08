@@ -12,6 +12,9 @@ from taggit.models import Tag
 
 
 class QuestionViewSet(viewsets.ModelViewSet):
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', 'content']
+    ordering_fields = ['id', 'likes', 'views']
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
