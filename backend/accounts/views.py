@@ -6,8 +6,14 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import generics
 from . import serializers
 from .utils import get_and_authenticate_user, create_user_account
+from questions.serializers import (
+    QuestionSerializer, AnswerSerializer
+)
+from questions.models import Question, Answer
 
 User = get_user_model()
 
@@ -65,3 +71,35 @@ class UserViewSet(viewsets.ModelViewSet):
         except Http404:
             pass
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class QuestionList(generics.ListAPIView):
+    serializer_class = QuestionSerializer
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        return Question.objects.filter(user_id=self.kwargs['user_id'])
+
+
+class AnswerList(generics.ListAPIView):
+    serializer_class = AnswerSerializer
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        return Answer.objects.filter(user_id=self.kwargs['user_id'])
+
+
+class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = QuestionSerializer
+    lookup_url_kwarg = 'question_id'
+
+    def get_queryset(self):
+        return Question.objects.filter(user_id=self.kwargs['user_id'])
+
+
+class AnswerDetail(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = AnswerSerializer
+    lookup_url_kwarg = 'answer_id'
+
+    def get_queryset(self):
+        return Answer.objects.filter(user_id=self.kwargs['user_id'])
