@@ -25,9 +25,9 @@
             <b-nav-item-dropdown v-if="isLoggedIn" right>
               <!-- Using 'button-content' slot -->
               <template v-slot:button-content>
-                <b>Hello {{ token }}</b>
+                <b>Hello {{ authUser.username }}</b>
               </template>
-              <b-dropdown-item :to="{ name: 'profile', params: { name: token }}">Profile</b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'profile', params: { name: authUser.username }}">Profile</b-dropdown-item>
               <b-dropdown-item @click="logout">Logout</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
@@ -50,7 +50,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["isLoggedIn"])
+    ...mapGetters(["isLoggedIn", "authUser"])
   },
   methods: {
     logout: function() {

@@ -16,6 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'date_joined',
             'last_login',
+            'auth_token'
         ]
 
 

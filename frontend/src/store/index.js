@@ -10,12 +10,10 @@ export default new Vuex.Store({
     status: '',
     token: localStorage.getItem('token') || '',
     user: [],
-    users: [],
   },
   mutations: {
-    AUTH_REQUEST(state, users) {
+    AUTH_REQUEST(state) {
       state.status = 'loading'
-      state.users = users
     },
     AUTH_SUCCES(state, token, user) {
       state.status = 'success'
@@ -30,7 +28,7 @@ export default new Vuex.Store({
       state.token = ''
     },
     DELETE_USER(state) {
-      state.users = ''
+      state.user = ''
     }
   },
   actions: {
@@ -43,10 +41,9 @@ export default new Vuex.Store({
           method: 'POST'
         })
           .then(resp => {
-            const token = resp.data.username
+            const token = resp.data.auth_token
             const user = resp.data
             localStorage.setItem('token', token)
-            axios.defaults.headers.common['Authorization'] = token
             commit('AUTH_SUCCES', token)
             commit('AUTH_SUCCES', user)
             resolve(resp)
@@ -67,10 +64,9 @@ export default new Vuex.Store({
           method: 'POST'
         })
           .then(resp => {
-            const token = resp.data.username
+            const token = resp.data.auth_token
             const user = resp.data
             localStorage.setItem('token', token)
-            axios.defaults.headers.common['Authorization'] = token
             commit('AUTH_SUCCES', token)
             commit('AUTH_SUCCES', user)
             resolve(resp)
@@ -91,7 +87,7 @@ export default new Vuex.Store({
         })
           .then(resp => {
             commit('LOGOUT')
-            const token = resp.data.username
+            const token = resp.data.auth_token
             localStorage.removeItem('token', token)
             resolve(resp)
           })
@@ -100,21 +96,27 @@ export default new Vuex.Store({
           })
       })
     },
-    delete_user({ commit, state, dispatch }, user) {
+    delete_user({ commit, state, token, dispatch }) {
+      const auth_token = localStorage.getItem('token', token)
       return new Promise((resolve, reject) => {
         if (confirm("Are you sure you want to delete the account!"))
           axios({
             url: '/api/users/' + state.token.id,
-            data: user,
+            data: token,
+            headers: { Authorization: 'Token ' + auth_token },
             method: 'DELETE'
-          })
+          }
+          )
             .then(resp => {
               commit('DELETE_USER')
               commit('LOGOUT')
+              const token = resp.data.token
+              localStorage.removeItem('token', token)
               dispatch('logout')
               resolve(resp)
             })
             .catch(err => {
+              console.log(auth_token);
               reject(err)
             })
       })
@@ -124,7 +126,6 @@ export default new Vuex.Store({
     authUser: state => state.token,
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
-    allUsers: state => state.users,
   },
   plugins: [createPersistedState()]
 })

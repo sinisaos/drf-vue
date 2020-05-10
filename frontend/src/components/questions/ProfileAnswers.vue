@@ -94,9 +94,14 @@ export default {
   },
   methods: {
     getAnswers() {
+      const token = "Token " + this.token;
       axios
         .get(
-          "/api/users/" + this.authUser.id + "/answers?page=" + this.currentPage
+          "/api/users/" +
+            this.authUser.id +
+            "/answers?page=" +
+            this.currentPage,
+          { headers: { Authorization: token } }
         )
         .then(res => {
           this.answers = res.data.results;
@@ -108,8 +113,11 @@ export default {
         });
     },
     answerDelete(id) {
+      const token = "Token " + this.token;
       axios
-        .delete("/api/users/" + this.authUser.id + "/answers/" + id)
+        .delete("/api/users/" + this.authUser.id + "/answers/" + id, {
+          headers: { Authorization: token }
+        })
         .then(res => {
           this.answers = res.data.answers;
           this.getAnswers();

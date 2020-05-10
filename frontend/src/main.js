@@ -5,18 +5,12 @@ import Vuelidate from 'vuelidate'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import Axios from 'axios'
+import axios from 'axios'
 
 Vue.use(BootstrapVue)
 Vue.use(Vuelidate)
-Vue.prototype.$http = Axios;
-Axios.defaults.withCredentials = true;
-Axios.defaults.baseURL = "http://localhost:8000";
-
-const token = localStorage.getItem('token');
-if (token) {
-  Vue.prototype.$http.defaults.headers.common['Authorization'] = token
-}
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = "http://localhost:8000";
 
 Vue.config.productionTip = false
 

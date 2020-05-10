@@ -4,14 +4,19 @@ from django.core.exceptions import ImproperlyConfigured
 from django.http import Http404
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticated
+)
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import generics
 from . import serializers
+from .permissions import IsOwnerOrAdmin
 from .utils import get_and_authenticate_user, create_user_account
 from questions.serializers import (
-    QuestionSerializer, AnswerSerializer
+    QuestionSerializer,
+    AnswerSerializer
 )
 from questions.models import Question, Answer
 
@@ -19,7 +24,7 @@ User = get_user_model()
 
 
 class AuthViewSet(viewsets.GenericViewSet):
-    permission_classes = [AllowAny, ]
+    permission_classes = [AllowAny]
     serializer_class = serializers.EmptySerializer
     serializer_classes = {
         'login': serializers.UserLoginSerializer,
@@ -53,27 +58,21 @@ class AuthViewSet(viewsets.GenericViewSet):
     def get_serializer_class(self):
         if not isinstance(self.serializer_classes, dict):
             raise ImproperlyConfigured(
-                "serializer_classes should be a dict mapping.")
-
+                "serializer_classes should be a dict mapping."
+            )
         if self.action in self.serializer_classes.keys():
             return self.serializer_classes[self.action]
         return super().get_serializer_class()
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
+    queryset = User.objects.prefetch_related('auth_token')
     serializer_class = serializers.UserSerializer
-
-    def destroy(self, request, *args, **kwargs):
-        try:
-            instance = self.get_object()
-            self.perform_destroy(instance)
-        except Http404:
-            pass
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class QuestionList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = QuestionSerializer
     pagination_class = PageNumberPagination
 
@@ -82,6 +81,7 @@ class QuestionList(generics.ListAPIView):
 
 
 class AnswerList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = AnswerSerializer
     pagination_class = PageNumberPagination
 
@@ -90,6 +90,7 @@ class AnswerList(generics.ListAPIView):
 
 
 class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = QuestionSerializer
     lookup_url_kwarg = 'question_id'
 
@@ -98,6 +99,7 @@ class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class AnswerDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = AnswerSerializer
     lookup_url_kwarg = 'answer_id'
 

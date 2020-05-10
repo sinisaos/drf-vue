@@ -101,12 +101,14 @@ export default {
   },
   methods: {
     getQuestions() {
+      const token = "Token " + this.token;
       axios
         .get(
           "/api/users/" +
             this.authUser.id +
             "/questions?page=" +
-            this.currentPage
+            this.currentPage,
+          { headers: { Authorization: token } }
         )
         .then(res => {
           this.questions = res.data.results;
@@ -118,8 +120,11 @@ export default {
         });
     },
     questionDelete(id) {
+      const token = "Token " + this.token;
       axios
-        .delete("/api/users/" + this.authUser.id + "/questions/" + id)
+        .delete("/api/users/" + this.authUser.id + "/questions/" + id, {
+          headers: { Authorization: token }
+        })
         .then(res => {
           this.questions = res.data.questions;
           this.getQuestions();

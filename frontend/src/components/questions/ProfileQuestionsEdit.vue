@@ -74,9 +74,11 @@ export default {
   },
   methods: {
     getQuestion() {
+      const token = "Token " + this.token;
       axios
         .get(
-          "/questions/" + this.$route.params.id + "/" + this.$route.params.slug
+          "/questions/" + this.$route.params.id + "/" + this.$route.params.slug,
+          { headers: { Authorization: token } }
         )
         .then(res => {
           this.question = res.data.question;
@@ -87,6 +89,7 @@ export default {
         });
     },
     updateQuestion() {
+      const token = "Token " + this.token;
       let data = {
         title: this.title,
         content: this.content
@@ -101,7 +104,8 @@ export default {
             this.authUser.id +
             "/questions/" +
             this.$route.params.id,
-          data
+          data,
+          { headers: { Authorization: token } }
         )
         .then(res => {
           this.data = res.data;
