@@ -108,7 +108,7 @@
         </form>
         <div>
           <div
-            v-if="token == question.question_author && question.get_accepted_answer === null && item.is_accepted === false"
+            v-if="authUser.username == question.question_author && question.get_accepted_answer === null && item.is_accepted === false"
           >
             <form
               @click="answerAccept(item.id, item.is_accepted)"
@@ -119,7 +119,7 @@
             </form>
             <br />
           </div>
-          <div v-else-if="question.question_author == token && item.is_accepted == 1">
+          <div v-else-if="question.question_author == authUser.username && item.is_accepted == 1">
             <span class="badge badge-badge-pill badge-success float-left">Accepted answer</span>
           </div>
           <div v-else-if="item.is_accepted == 1">
@@ -221,6 +221,15 @@ export default {
       let data = {
         likes: likes + 1,
         has_accepted_answer: has_accepted_answer + 1
+      };
+      axios.patch("/api/answers/" + id, data).then(res => {
+        this.data = res.data;
+        this.getQuestion();
+      });
+    },
+    answerAccept(id, is_accepted) {
+      let data = {
+        is_accepted: is_accepted + 1
       };
       axios.patch("/api/answers/" + id, data).then(res => {
         this.data = res.data;

@@ -13,13 +13,13 @@
       </div>
     </div>
     <div class="col-md-8 offset-md-2" v-if="questions.length !== 0">
-      <button class="btn btn-link" @click="getQuestions">Newest</button>
+      <button class="btn btn-link">
+        <router-link :to="{ name: 'questions'}">Newest</router-link>
+      </button>
       <button class="btn btn-link">
         <router-link :to="{ name: 'questionsOpen'}">Open</router-link>
       </button>
-      <button class="btn btn-link">
-        <router-link :to="{ name: 'questionsSolved'}">Solved</router-link>
-      </button>
+      <button class="btn btn-link" @click="getQuestions">Solved</button>
       <button class="btn btn-link" @click="sortOldest">Oldest</button>
       <button class="btn btn-link" @click="sortMostViewed">Viewed</button>
       <button class="btn btn-link" @click="sortMostLiked">Popular</button>
@@ -166,7 +166,7 @@ export default {
     getQuestions() {
       if (!this.query) {
         axios
-          .get("/api/questions?page=" + this.currentPage)
+          .get("/api/solved?page=" + this.currentPage)
           .then(res => {
             this.questions = res.data.results;
             this.total = res.data.count;
@@ -182,9 +182,7 @@ export default {
           });
       } else {
         axios
-          .get(
-            "/api/questions?search=" + this.query + "&page=" + this.currentPage
-          )
+          .get("/api/solved?search=" + this.query + "&page=" + this.currentPage)
           .then(res => {
             this.questions = res.data.results;
             this.total = res.data.count;
@@ -204,7 +202,7 @@ export default {
     sortOldest() {
       if (!this.query) {
         axios
-          .get("/api/questions?ordering=id&page=" + this.currentPage)
+          .get("/api/solved?ordering=id&page=" + this.currentPage)
           .then(res => {
             this.questions = res.data.results;
             this.total = res.data.count;
@@ -221,7 +219,7 @@ export default {
       } else {
         axios
           .get(
-            "/api/questions?ordering=id&page=" +
+            "/api/solved?ordering=id&page=" +
               this.currentPage +
               "&search=" +
               this.query
@@ -245,7 +243,7 @@ export default {
     sortMostViewed() {
       if (!this.query) {
         axios
-          .get("/api/questions?ordering=-views&page=" + this.currentPage)
+          .get("/api/solved?ordering=-views&page=" + this.currentPage)
           .then(res => {
             this.questions = res.data.results;
             this.total = res.data.count;
@@ -262,7 +260,7 @@ export default {
       } else {
         axios
           .get(
-            "/api/questions?ordering=-views&page=" +
+            "/api/solved?ordering=-views&page=" +
               this.currentPage +
               "&search=" +
               this.query
@@ -286,7 +284,7 @@ export default {
     sortMostLiked() {
       if (!this.query) {
         axios
-          .get("/api/questions?ordering=-likes&page=" + this.currentPage)
+          .get("/api/solved?ordering=-likes&page=" + this.currentPage)
           .then(res => {
             this.questions = res.data.results;
             this.total = res.data.count;
@@ -303,7 +301,7 @@ export default {
       } else {
         axios
           .get(
-            "/api/questions?ordering=-likes&page=" +
+            "/api/solved?ordering=-likes&page=" +
               this.currentPage +
               "&search=" +
               this.query

@@ -25,6 +25,7 @@ class AnswerSerializer(serializers.ModelSerializer):
 class QuestionSerializer(TaggitSerializer, serializers.ModelSerializer):
     question_author = serializers.ReadOnlyField(source='user.username')
     get_answer_count = serializers.IntegerField(read_only=True)
+    get_accepted_answer = serializers.BooleanField(read_only=True)
     answers = AnswerSerializer(many=True, read_only=True)
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     tags = TagListSerializerField()

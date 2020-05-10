@@ -31,6 +31,14 @@ class Question(models.Model):
     def get_answer_count(self):
         return Question.objects.filter(answers__question=self).count()
 
+    def get_accepted_answer(self):
+        try:
+            accepted_answer = Answer.objects.get(
+                question=self, is_accepted=True)
+            return accepted_answer
+        except Answer.DoesNotExist:
+            accepted_answer = None
+
 
 class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

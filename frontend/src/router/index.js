@@ -4,9 +4,10 @@ import store from '../store/index.js'
 import Home from '../views/Home.vue'
 import Login from '../components/accounts/Login.vue'
 import Register from '../components/accounts/Register.vue'
-import Dashboard from '../components/accounts/Dashboard.vue'
 import Profile from '../components/accounts/Profile.vue'
 import Questions from '../components/questions/Questions.vue'
+import QuestionsOpen from '../components/questions/QuestionsOpen.vue'
+import QuestionsSolved from '../components/questions/QuestionsSolved.vue'
 import Question from '../components/questions/Question.vue'
 import CreateQuestion from '../components/questions/CreateQuestion.vue'
 import QuestionsByTag from '../components/questions/QuestionsByTag.vue'
@@ -35,14 +36,6 @@ let router = new Router({
       path: '/register',
       name: 'register',
       component: Register
-    },
-    {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: Dashboard,
-      meta: {
-        requiresAuth: true
-      }
     },
     {
       path: '/profile/:name',
@@ -88,6 +81,16 @@ let router = new Router({
       path: '/questions',
       name: 'questions',
       component: Questions
+    },
+    {
+      path: '/questions/open',
+      name: 'questionsOpen',
+      component: QuestionsOpen
+    },
+    {
+      path: '/questions/solved',
+      name: 'questionsSolved',
+      component: QuestionsSolved
     },
     {
       path: '/questions/:id/:slug',

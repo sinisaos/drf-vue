@@ -31,6 +31,44 @@ class AnswerViewSet(viewsets.ModelViewSet):
     serializer_class = AnswerSerializer
 
 
+class OpenQuestionListView(generics.ListAPIView):
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', 'content']
+    ordering_fields = ['id', 'likes', 'views']
+    pagination_class = PageNumberPagination
+    serializer_class = QuestionSerializer
+
+    def get_queryset(self):
+        queryset = (Question.objects
+                    .select_related('user')
+                    .prefetch_related('answers', 'tags')
+                    )
+        queryset_ids = [
+            obj.id for obj in queryset if not obj.get_accepted_answer()
+        ]
+        queryset = queryset.filter(id__in=queryset_ids)
+        return queryset
+
+
+class SolvedQuestionListView(generics.ListAPIView):
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', 'content']
+    ordering_fields = ['id', 'likes', 'views']
+    serializer_class = QuestionSerializer
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        queryset = (Question.objects
+                    .select_related('user')
+                    .prefetch_related('answers', 'tags')
+                    )
+        queryset_ids = [
+            obj.id for obj in queryset if obj.get_accepted_answer()
+        ]
+        queryset = queryset.filter(id__in=queryset_ids)
+        return queryset
+
+
 class TagListView(generics.ListAPIView):
     serializer_class = QuestionSerializer
 
