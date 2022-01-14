@@ -12,7 +12,7 @@
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.13.1",
     "core-js": "^3.6.4",
-    "node-forge": "^0.10.0",
+    "node-forge": "^1.0.0",
     "serialize-javascript": "^5.0.1",
     "vue": "^2.6.11",
     "vue-loading-overlay": "^3.3.2",
