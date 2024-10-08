@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model, password_validation
 from django.contrib.auth.models import BaseUserManager
-from rest_framework.authtoken.models import Token
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 
 User = get_user_model()
 
@@ -10,14 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = [
-            'id',
-            'username',
-            'email',
-            'date_joined',
-            'last_login',
-            'auth_token'
-        ]
+        fields = ["id", "username", "email", "date_joined", "last_login", "auth_token"]
 
 
 class UserLoginSerializer(serializers.Serializer):
@@ -33,18 +26,19 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     """
     A user serializer for registering the user
     """
+
     auth_token = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = [
-            'id',
-            'username',
-            'email',
-            'password',
-            'auth_token',
-            'date_joined',
-            'last_login'
+            "id",
+            "username",
+            "email",
+            "password",
+            "auth_token",
+            "date_joined",
+            "last_login",
         ]
 
     def get_auth_token(self, obj):
@@ -54,8 +48,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     def validate_email(self, value):
         user = User.objects.filter(email=value)
         if user:
-            raise serializers.ValidationError(
-                "A user with that email already exists.")
+            raise serializers.ValidationError("A user with that email already exists.")
         return BaseUserManager.normalize_email(value)
 
     def validate_password(self, value):

@@ -42,6 +42,7 @@ export default new Vuex.Store({
         })
           .then(resp => {
             const token = resp.data.auth_token
+            console.log(resp.data)
             const user = resp.data
             localStorage.setItem('token', token)
             commit('AUTH_SUCCES', token)

@@ -3,7 +3,6 @@ from django.db import models
 from django.utils.text import slugify
 from taggit.managers import TaggableManager
 
-
 User = get_user_model()
 
 
@@ -22,7 +21,7 @@ class Question(models.Model):
         return self.title
 
     class Meta:
-        ordering = ['-created']
+        ordering = ["-created"]
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -33,8 +32,7 @@ class Question(models.Model):
 
     def get_accepted_answer(self):
         try:
-            accepted_answer = Answer.objects.get(
-                question=self, is_accepted=True)
+            accepted_answer = Answer.objects.get(question=self, is_accepted=True)
             return accepted_answer
         except Answer.DoesNotExist:
             accepted_answer = None
@@ -52,4 +50,4 @@ class Answer(models.Model):
     is_accepted = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['-created']
+        ordering = ["-created"]
