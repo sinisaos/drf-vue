@@ -45,7 +45,7 @@
                 </h4>
                 <span>
                     asked on
-                    <i>{{ item.created | dateFormat }}</i> by
+                    <i>{{ dateFormat(item.created) }}</i> by
                     <b>{{ item.question_author }}</b>
                     <b></b>
                 </span>
@@ -59,7 +59,6 @@
                 >
                     <router-link
                         :to="{ name: 'questionsByTag', params: { name: tag } }"
-                        tag="button"
                         class="btn btn-primary"
                         >{{ tag }}</router-link
                     >
@@ -146,7 +145,7 @@
         </div>
         <div class="vld-parent">
             <loading
-                :active.sync="isLoading"
+                :active="isLoading"
                 :is-full-page="fullPage"
                 :opacity="1"
             ></loading>
@@ -156,10 +155,6 @@
 
 <script>
 import axios from "axios"
-// Import component
-import Loading from "vue-loading-overlay"
-// Import stylesheet
-import "vue-loading-overlay/dist/vue-loading.css"
 
 export default {
     data() {
@@ -176,11 +171,8 @@ export default {
             questions: []
         }
     },
-    components: {
-        Loading
-    },
-    filters: {
-        dateFormat: function (value) {
+    computed: {
+        dateFormat(value) {
             let date = new Date(value)
             return date.toString().slice(4, 24)
         }

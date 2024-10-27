@@ -4,7 +4,7 @@
             <h4>
                 <div class="vld-parent">
                     <loading
-                        :active.sync="isLoading"
+                        :active="isLoading"
                         :is-full-page="fullPage"
                         :opacity="1"
                     ></loading>
@@ -13,7 +13,7 @@
             </h4>
             <span>
                 asked on
-                <i>{{ question.created | dateFormat }}</i> by
+                <i>{{ dateFormat(question.created) }}</i> by
                 <b>{{ question.question_author }}</b>
                 <b></b>
             </span>
@@ -27,7 +27,6 @@
             >
                 <router-link
                     :to="{ name: 'questionsByTag', params: { name: tag } }"
-                    tag="button"
                     class="btn btn-primary"
                     >{{ tag }}</router-link
                 >
@@ -96,7 +95,7 @@
             <h6 v-for="(item, index) in question.answers" :key="index">
                 <span>
                     Answered on
-                    <i>{{ item.created | dateFormat }}</i> by
+                    <i>{{ dateFormat(item.created) }}</i> by
                     <b>{{ item.answer_author }}</b>
                     <br />
                     <br />
@@ -172,13 +171,13 @@
 <script>
 import axios from "axios"
 import { mapGetters } from "vuex"
-import { required } from "vuelidate/lib/validators"
-// Import component
-import Loading from "vue-loading-overlay"
-// Import stylesheet
-import "vue-loading-overlay/dist/vue-loading.css"
+import { useVuelidate } from "@vuelidate/core"
+import { required } from "@vuelidate/validators"
 
 export default {
+    setup() {
+        return { v$: useVuelidate() }
+    },
     data() {
         return {
             isLoading: true,
@@ -190,14 +189,11 @@ export default {
             }
         }
     },
-    components: {
-        Loading
-    },
     validations: {
         content: { required }
     },
-    filters: {
-        dateFormat: function (value) {
+    computed: {
+        dateFormat(value) {
             let date = new Date(value)
             return date.toString().slice(4, 24)
         }
