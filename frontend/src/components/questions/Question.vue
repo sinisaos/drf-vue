@@ -2,18 +2,11 @@
     <div class="container">
         <div class="col-md-8 offset-md-2">
             <h4>
-                <div class="vld-parent">
-                    <loading
-                        :active.sync="isLoading"
-                        :is-full-page="fullPage"
-                        :opacity="1"
-                    ></loading>
-                </div>
                 <b>{{ question.title }}</b>
             </h4>
             <span>
                 asked on
-                <i>{{ question.created | dateFormat }}</i> by
+                <i>{{ formatDate(question.created) }}</i> by
                 <b>{{ question.question_author }}</b>
                 <b></b>
             </span>
@@ -27,7 +20,6 @@
             >
                 <router-link
                     :to="{ name: 'questionsByTag', params: { name: tag } }"
-                    tag="button"
                     class="btn btn-primary"
                     >{{ tag }}</router-link
                 >
@@ -35,7 +27,7 @@
             <router-link
                 v-if="!isLoggedIn"
                 to="/login"
-                class="float-right"
+                class="float-end"
                 style="color: #33cc33; cursor: pointer"
             >
                 <i
@@ -49,7 +41,7 @@
                 method="POST"
                 v-else
                 @click="questionLike(question.id, question.likes)"
-                class="float-right"
+                class="float-end"
                 style="color: #33cc33; cursor: pointer"
             >
                 <i
@@ -74,10 +66,10 @@
                         placeholder="Answer..."
                         rows="5"
                         max-rows="10"
-                        :class="{ 'is-invalid': $v.content.$error }"
+                        :class="{ 'is-invalid': v$.content.$error }"
                     ></b-form-textarea>
-                    <div v-if="$v.content.$error" class="invalid-feedback">
-                        <span v-if="!$v.content.required"
+                    <div v-if="v$.content.$error" class="invalid-feedback">
+                        <span v-if="!v$.content.required"
                             >Content is required</span
                         >
                     </div>
@@ -88,15 +80,13 @@
             </b-form>
             <br />
             <br />
-            <h3 class="float-left">
-                {{ question.get_answer_count }} answer(s)
-            </h3>
+            <h3>{{ question.get_answer_count }} answer(s)</h3>
             <br />
             <hr />
             <h6 v-for="(item, index) in question.answers" :key="index">
                 <span>
                     Answered on
-                    <i>{{ item.created | dateFormat }}</i> by
+                    <i>{{ formatDate(item.created) }}</i> by
                     <b>{{ item.answer_author }}</b>
                     <br />
                     <br />
@@ -106,7 +96,7 @@
                 <router-link
                     v-if="!isLoggedIn"
                     to="/login"
-                    class="float-right"
+                    class="float-end"
                     style="color: #33cc33; cursor: pointer"
                 >
                     <i
@@ -119,7 +109,7 @@
                 <form
                     v-else
                     @click="answerLike(item.id, item.likes)"
-                    class="float-right"
+                    class="float-end"
                     style="color: #33cc33; cursor: pointer"
                 >
                     <i
@@ -139,7 +129,7 @@
                     >
                         <form
                             @click="answerAccept(item.id, item.is_accepted)"
-                            class="btn btn-success float-left"
+                            class="btn btn-success float-start"
                         >
                             Accept Answer
                         </form>
@@ -151,12 +141,12 @@
                             item.is_accepted == 1
                         "
                     >
-                        <span class="badge rounded-pill bg-success float-end"
+                        <span class="badge rounded-pill bg-success"
                             >Accepted answer</span
                         >
                     </div>
                     <div v-else-if="item.is_accepted == 1">
-                        <span class="badge rounded-pill bg-success float-end"
+                        <span class="badge rounded-pill bg-success"
                             >Accepted answer</span
                         >
                     </div>
@@ -171,18 +161,18 @@
 
 <script>
 import axios from "axios"
+import dayjs from "dayjs"
 import { mapGetters } from "vuex"
-import { required } from "vuelidate/lib/validators"
-// Import component
-import Loading from "vue-loading-overlay"
-// Import stylesheet
-import "vue-loading-overlay/dist/vue-loading.css"
+import { useVuelidate } from "@vuelidate/core"
+import { required } from "@vuelidate/validators"
+import { defineComponent } from "vue"
 
-export default {
+export default defineComponent({
+    setup() {
+        return { v$: useVuelidate() }
+    },
     data() {
         return {
-            isLoading: true,
-            fullPage: true,
             content: "",
             question: {},
             get token() {
@@ -190,28 +180,21 @@ export default {
             }
         }
     },
-    components: {
-        Loading
-    },
     validations: {
         content: { required }
     },
-    filters: {
-        dateFormat: function (value) {
-            let date = new Date(value)
-            return date.toString().slice(4, 24)
-        }
-    },
     methods: {
+        formatDate(dateString) {
+            const date = dayjs(dateString)
+            return date.format("dddd MMMM D, YYYY")
+        },
         getQuestion() {
             axios
                 .get("/api/questions/" + this.$route.params.id)
                 .then((res) => {
                     this.question = res.data
-                    this.isLoading = false
                 })
                 .catch((error) => {
-                    // eslint-disable-next-line
                     console.error(error)
                 })
         },
@@ -221,8 +204,8 @@ export default {
                 content: this.content,
                 question: this.question.id
             }
-            this.$v.$touch()
-            if (this.$v.$invalid) {
+            this.v$.$touch()
+            if (this.v$.$invalid) {
                 return
             }
             axios
@@ -280,11 +263,5 @@ export default {
     created() {
         this.getQuestion()
     }
-}
+})
 </script>
-
-<style lang="css" scoped>
-.btn {
-    margin-right: 5px;
-}
-</style>

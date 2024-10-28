@@ -8,7 +8,7 @@
                         v-for="(value, msg, index) in message"
                         :key="index"
                         variant="danger"
-                        >{{ value | toString }}</b-alert
+                        >{{ convertMessage(value) }}</b-alert
                     >
                     <h1>Register</h1>
                     <br />
@@ -21,10 +21,10 @@
                                 id="username"
                                 name="username"
                                 class="form-control"
-                                :class="{ 'is-invalid': $v.username.$error }"
+                                :class="{ 'is-invalid': v$.username.$error }"
                             />
                             <div
-                                v-if="!$v.username.required"
+                                v-if="!v$.username.required"
                                 class="invalid-feedback"
                             >
                                 Username is required
@@ -38,16 +38,16 @@
                                 id="email"
                                 name="email"
                                 class="form-control"
-                                :class="{ 'is-invalid': $v.email.$error }"
+                                :class="{ 'is-invalid': v$.email.$error }"
                             />
                             <div
-                                v-if="$v.email.$error"
+                                v-if="v$.email.$error"
                                 class="invalid-feedback"
                             >
-                                <span v-if="!$v.email.required"
+                                <span v-if="!v$.email.required"
                                     >Email is required</span
                                 >
-                                <span v-if="!$v.email.email"
+                                <span v-if="!v$.email.email"
                                     >Email is invalid</span
                                 >
                             </div>
@@ -60,16 +60,16 @@
                                 id="password"
                                 name="password"
                                 class="form-control"
-                                :class="{ 'is-invalid': $v.password.$error }"
+                                :class="{ 'is-invalid': v$.password.$error }"
                             />
                             <div
-                                v-if="$v.password.$error"
+                                v-if="v$.password.$error"
                                 class="invalid-feedback"
                             >
-                                <span v-if="!$v.password.required"
+                                <span v-if="!v$.password.required"
                                     >Password is required</span
                                 >
-                                <span v-if="!$v.password.minLength"
+                                <span v-if="!v$.password.minLength"
                                     >Password must be at least 4
                                     characters</span
                                 >
@@ -86,24 +86,25 @@
                                 name="passwordConfirmation"
                                 class="form-control"
                                 :class="{
-                                    'is-invalid': $v.passwordConfirmation.$error
+                                    'is-invalid': v$.passwordConfirmation.$error
                                 }"
                             />
                             <div
-                                v-if="$v.passwordConfirmation.$error"
+                                v-if="v$.passwordConfirmation.$error"
                                 class="invalid-feedback"
                             >
-                                <span v-if="!$v.passwordConfirmation.required"
+                                <span v-if="!v$.passwordConfirmation.required"
                                     >Confirm Password is required</span
                                 >
                                 <span
                                     v-else-if="
-                                        !$v.passwordConfirmation.sameAsPassword
+                                        !v$.passwordConfirmation.sameAsPassword
                                     "
                                     >Passwords must match</span
                                 >
                             </div>
                         </div>
+                        <br />
                         <div class="form-group">
                             <button class="btn btn-primary">Register</button>
                         </div>
@@ -115,9 +116,14 @@
 </template>
 
 <script>
-import { required, email, minLength, sameAs } from "vuelidate/lib/validators"
+import { useVuelidate } from "@vuelidate/core"
+import { required, email, minLength, sameAs } from "@vuelidate/validators"
+import { defineComponent } from "vue"
 
-export default {
+export default defineComponent({
+    setup() {
+        return { v$: useVuelidate() }
+    },
     data() {
         return {
             username: "",
@@ -129,26 +135,29 @@ export default {
             showMessage: false
         }
     },
-    validations: {
-        username: { required },
-        email: { required, email },
-        password: { required, minLength: minLength(4) },
-        passwordConfirmation: { required, sameAsPassword: sameAs("password") }
-    },
-    filters: {
-        toString: function (value) {
-            return value.toString()
+    validations() {
+        return {
+            username: { required },
+            email: { required, email },
+            password: { required, minLength: minLength(8) },
+            passwordConfirmation: {
+                required,
+                sameAsPassword: sameAs(this.password)
+            }
         }
     },
     methods: {
-        register: function () {
+        convertMessage(value) {
+            return value.toString()
+        },
+        register() {
             let data = {
                 username: this.username,
                 email: this.email,
                 password: this.password
             }
-            this.$v.$touch()
-            if (this.$v.$invalid) {
+            this.v$.$touch()
+            if (this.v$.$invalid) {
                 return
             }
             this.$store
@@ -161,5 +170,5 @@ export default {
                 })
         }
     }
-}
+})
 </script>

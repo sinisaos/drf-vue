@@ -17,10 +17,10 @@
                                 id="username"
                                 name="username"
                                 class="form-control"
-                                :class="{ 'is-invalid': $v.username.$error }"
+                                :class="{ 'is-invalid': v$.username.$error }"
                             />
                             <div
-                                v-if="!$v.username.required"
+                                v-if="!v$.username.required"
                                 class="invalid-feedback"
                             >
                                 Username is required
@@ -34,21 +34,22 @@
                                 id="password"
                                 name="password"
                                 class="form-control"
-                                :class="{ 'is-invalid': $v.password.$error }"
+                                :class="{ 'is-invalid': v$.password.$error }"
                             />
                             <div
-                                v-if="$v.password.$error"
+                                v-if="v$.password.$error"
                                 class="invalid-feedback"
                             >
-                                <span v-if="!$v.password.required"
+                                <span v-if="!v$.password.required"
                                     >Password is required</span
                                 >
-                                <span v-if="!$v.password.minLength"
+                                <span v-if="!v$.password.minLength"
                                     >Password must be at least 4
                                     characters</span
                                 >
                             </div>
                         </div>
+                        <br />
                         <div class="form-group">
                             <button class="btn btn-primary">Submit</button>
                         </div>
@@ -60,9 +61,14 @@
 </template>
 
 <script>
-import { required, minLength } from "vuelidate/lib/validators"
+import { useVuelidate } from "@vuelidate/core"
+import { required, minLength } from "@vuelidate/validators"
+import { defineComponent } from "vue"
 
-export default {
+export default defineComponent({
+    setup() {
+        return { v$: useVuelidate() }
+    },
     data() {
         return {
             username: "",
@@ -74,14 +80,14 @@ export default {
     },
     validations: {
         username: { required },
-        password: { required, minLength: minLength(4) }
+        password: { required, minLength: minLength(8) }
     },
     methods: {
-        login: function () {
+        login() {
             let username = this.username
             let password = this.password
-            this.$v.$touch()
-            if (this.$v.$invalid) {
+            this.v$.$touch()
+            if (this.v$.$invalid) {
                 return
             }
             this.$store
@@ -91,10 +97,9 @@ export default {
                     this.message = err.response.data.toString()
                     this.showMessage = true
                     this.showDismissibleAlert = true
-                    // eslint-disable-next-line
                     console.log(err.response.data)
                 })
         }
     }
-}
+})
 </script>

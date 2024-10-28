@@ -45,7 +45,7 @@
                 </h4>
                 <span>
                     asked on
-                    <i>{{ item.created | dateFormat }}</i> by
+                    <i>{{ formatDate(item.created) }}</i> by
                     <b>{{ item.question_author }}</b>
                     <b></b>
                 </span>
@@ -59,7 +59,6 @@
                 >
                     <router-link
                         :to="{ name: 'questionsByTag', params: { name: tag } }"
-                        tag="button"
                         class="btn btn-primary"
                         >{{ tag }}</router-link
                     >
@@ -144,28 +143,17 @@
         <div class="col-md-8 offset-md-2" v-else>
             <h3>No results.</h3>
         </div>
-        <div class="vld-parent">
-            <loading
-                :active.sync="isLoading"
-                :is-full-page="fullPage"
-                :opacity="1"
-            ></loading>
-        </div>
     </div>
 </template>
 
 <script>
 import axios from "axios"
-// Import component
-import Loading from "vue-loading-overlay"
-// Import stylesheet
-import "vue-loading-overlay/dist/vue-loading.css"
+import dayjs from "dayjs"
+import { defineComponent } from "vue"
 
-export default {
+export default defineComponent({
     data() {
         return {
-            isLoading: true,
-            fullPage: true,
             empty: true,
             query: null,
             orderingId: false,
@@ -176,16 +164,11 @@ export default {
             questions: []
         }
     },
-    components: {
-        Loading
-    },
-    filters: {
-        dateFormat: function (value) {
-            let date = new Date(value)
-            return date.toString().slice(4, 24)
-        }
-    },
     methods: {
+        formatDate(dateString) {
+            const date = dayjs(dateString)
+            return date.format("dddd MMMM D, YYYY")
+        },
         getQuestions() {
             if (!this.query) {
                 axios
@@ -193,15 +176,12 @@ export default {
                     .then((res) => {
                         this.questions = res.data.results
                         this.total = res.data.count
-                        this.isLoading = false
                         this.orderingId = false
                         this.orderingViews = false
                         this.orderingLikes = false
                     })
                     .catch((error) => {
-                        // eslint-disable-next-line
                         console.error(error)
-                        this.isLoading = false
                     })
             } else {
                 axios
@@ -217,13 +197,10 @@ export default {
                         this.orderingId = false
                         this.orderingViews = false
                         this.orderingLikes = false
-                        this.isLoading = false
                     })
                     .catch((error) => {
                         this.questions = []
-                        // eslint-disable-next-line
                         console.log(error.response.data)
-                        this.isLoading = false
                     })
             }
         },
@@ -234,15 +211,12 @@ export default {
                     .then((res) => {
                         this.questions = res.data.results
                         this.total = res.data.count
-                        this.isLoading = false
                         this.orderingId = true
                         this.orderingViews = false
                         this.orderingLikes = false
                     })
                     .catch((error) => {
-                        // eslint-disable-next-line
                         console.error(error)
-                        this.isLoading = false
                     })
             } else {
                 axios
@@ -255,16 +229,13 @@ export default {
                     .then((res) => {
                         this.questions = res.data.results
                         this.total = res.data.count
-                        this.isLoading = false
                         this.orderingId = true
                         this.orderingViews = false
                         this.orderingLikes = false
                     })
                     .catch((error) => {
                         this.questions = []
-                        // eslint-disable-next-line
                         console.log(error.response.data)
-                        this.isLoading = false
                     })
             }
         },
@@ -278,15 +249,12 @@ export default {
                     .then((res) => {
                         this.questions = res.data.results
                         this.total = res.data.count
-                        this.isLoading = false
                         this.orderingId = false
                         this.orderingViews = true
                         this.orderingLikes = false
                     })
                     .catch((error) => {
-                        // eslint-disable-next-line
                         console.error(error)
-                        this.isLoading = false
                     })
             } else {
                 axios
@@ -299,16 +267,13 @@ export default {
                     .then((res) => {
                         this.questions = res.data.results
                         this.total = res.data.count
-                        this.isLoading = false
                         this.orderingId = false
                         this.orderingViews = true
                         this.orderingLikes = false
                     })
                     .catch((error) => {
                         this.questions = []
-                        // eslint-disable-next-line
                         console.log(error.response.data)
-                        this.isLoading = false
                     })
             }
         },
@@ -322,15 +287,12 @@ export default {
                     .then((res) => {
                         this.questions = res.data.results
                         this.total = res.data.count
-                        this.isLoading = false
                         this.orderingId = false
                         this.orderingViews = false
                         this.orderingLikes = true
                     })
                     .catch((error) => {
-                        // eslint-disable-next-line
                         console.error(error)
-                        this.isLoading = false
                     })
             } else {
                 axios
@@ -343,16 +305,13 @@ export default {
                     .then((res) => {
                         this.questions = res.data.results
                         this.total = res.data.count
-                        this.isLoading = false
                         this.orderingId = false
                         this.orderingViews = false
                         this.orderingLikes = true
                     })
                     .catch((error) => {
                         this.questions = []
-                        // eslint-disable-next-line
                         console.log(error.response.data)
-                        this.isLoading = false
                     })
             }
         }
@@ -360,7 +319,7 @@ export default {
     created() {
         this.getQuestions()
     }
-}
+})
 </script>
 
 <style lang="css">

@@ -1,21 +1,24 @@
-import 'bootstrap/dist/css/bootstrap.css'
-import Vue from 'vue'
-import BootstrapVue from 'bootstrap-vue'
-import Vuelidate from 'vuelidate'
-import App from './App.vue'
-import router from './router'
-import store from './store'
+import { createApp } from 'vue'
+import { createBootstrap } from 'bootstrap-vue-next'
+import router from "./router"
+import store from "./store"
 import axios from 'axios'
+import App from './App.vue'
 
-Vue.use(BootstrapVue)
-Vue.use(Vuelidate)
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:8000";
+import { LoadingPlugin } from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/css/index.css'
 
-Vue.config.productionTip = false
+// Add the necessary CSS
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
+axios.defaults.withCredentials = true
+axios.defaults.baseURL = "http://localhost:8000"
+
+
+const app = createApp(App)
+app.use(createBootstrap())
+app.use(LoadingPlugin)
+app.use(store)
+app.use(router)
+app.mount('#app')

@@ -136,7 +136,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-CORS_ORIGIN_WHITELIST = ["http://localhost:8080"]
+CORS_ORIGIN_WHITELIST = ["http://localhost:5173"]
 
 CORS_ALLOW_CREDENTIALS = True
 
