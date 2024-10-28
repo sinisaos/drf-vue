@@ -8,7 +8,7 @@
                         v-for="(value, msg, index) in message"
                         :key="index"
                         variant="danger"
-                        >{{ toString(value) }}</b-alert
+                        >{{ convertMessage(value) }}</b-alert
                     >
                     <h1>Register</h1>
                     <br />
@@ -138,15 +138,15 @@ export default defineComponent({
         return {
             username: { required },
             email: { required, email },
-            password: { required, minLength: minLength(4) },
+            password: { required, minLength: minLength(8) },
             passwordConfirmation: {
                 required,
-                sameAsPassword: sameAs("password")
+                sameAsPassword: sameAs(this.password)
             }
         }
     },
     computed: {
-        toString(value) {
+        convertMessage(value) {
             return value.toString()
         }
     },

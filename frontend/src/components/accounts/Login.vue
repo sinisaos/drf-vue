@@ -62,8 +62,9 @@
 <script>
 import { useVuelidate } from "@vuelidate/core"
 import { required, minLength } from "@vuelidate/validators"
+import { defineComponent } from "vue"
 
-export default {
+export default defineComponent({
     setup() {
         return { v$: useVuelidate() }
     },
@@ -95,10 +96,9 @@ export default {
                     this.message = err.response.data.toString()
                     this.showMessage = true
                     this.showDismissibleAlert = true
-                    // eslint-disable-next-line
                     console.log(err.response.data)
                 })
         }
     }
-}
+})
 </script>

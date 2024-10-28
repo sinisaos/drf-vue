@@ -84,7 +84,6 @@ export default defineComponent({
                     this.isLoading = false
                 })
                 .catch((error) => {
-                    // eslint-disable-next-line
                     console.error(error)
                     this.isLoading = false
                 })

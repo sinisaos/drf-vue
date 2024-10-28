@@ -26,12 +26,13 @@
 
 <script>
 import axios from "axios"
+import { defineComponent } from "vue"
 
-export default {
-    setup() {
-        const isLoading = ref(false)
-        const fullPage = ref(true)
-    },
+export default defineComponent({
+    // setup() {
+    //     const isLoading = ref(false)
+    //     const fullPage = ref(true)
+    // },
     data() {
         return {
             isLoading: true,
@@ -56,11 +57,6 @@ export default {
     created() {
         this.getTags()
     }
-}
+})
 </script>
 
-<style lang="css">
-.btn {
-    margin: 5px 5px;
-}
-</style>

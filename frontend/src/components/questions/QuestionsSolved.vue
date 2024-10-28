@@ -154,8 +154,9 @@
 
 <script>
 import axios from "axios"
+import { defineComponent } from "vue"
 
-export default {
+export default defineComponent({
     data() {
         return {
             isLoading: true,
@@ -190,7 +191,6 @@ export default {
                         this.orderingLikes = false
                     })
                     .catch((error) => {
-                        // eslint-disable-next-line
                         console.error(error)
                         this.isLoading = false
                     })
@@ -212,7 +212,6 @@ export default {
                     })
                     .catch((error) => {
                         this.questions = []
-                        // eslint-disable-next-line
                         console.log(error.response.data)
                         this.isLoading = false
                     })
@@ -231,7 +230,6 @@ export default {
                         this.orderingLikes = false
                     })
                     .catch((error) => {
-                        // eslint-disable-next-line
                         console.error(error)
                         this.isLoading = false
                     })
@@ -253,7 +251,6 @@ export default {
                     })
                     .catch((error) => {
                         this.questions = []
-                        // eslint-disable-next-line
                         console.log(error.response.data)
                         this.isLoading = false
                     })
@@ -272,7 +269,6 @@ export default {
                         this.orderingLikes = false
                     })
                     .catch((error) => {
-                        // eslint-disable-next-line
                         console.error(error)
                         this.isLoading = false
                     })
@@ -294,7 +290,6 @@ export default {
                     })
                     .catch((error) => {
                         this.questions = []
-                        // eslint-disable-next-line
                         console.log(error.response.data)
                         this.isLoading = false
                     })
@@ -313,7 +308,6 @@ export default {
                         this.orderingLikes = true
                     })
                     .catch((error) => {
-                        // eslint-disable-next-line
                         console.error(error)
                         this.isLoading = false
                     })
@@ -335,7 +329,6 @@ export default {
                     })
                     .catch((error) => {
                         this.questions = []
-                        // eslint-disable-next-line
                         console.log(error.response.data)
                         this.isLoading = false
                     })
@@ -345,7 +338,7 @@ export default {
     created() {
         this.getQuestions()
     }
-}
+})
 </script>
 
 <style lang="css">

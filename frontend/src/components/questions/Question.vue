@@ -173,8 +173,9 @@ import axios from "axios"
 import { mapGetters } from "vuex"
 import { useVuelidate } from "@vuelidate/core"
 import { required } from "@vuelidate/validators"
+import { defineComponent } from "vue"
 
-export default {
+export default defineComponent({
     setup() {
         return { v$: useVuelidate() }
     },
@@ -207,7 +208,6 @@ export default {
                     this.isLoading = false
                 })
                 .catch((error) => {
-                    // eslint-disable-next-line
                     console.error(error)
                 })
         },
@@ -276,7 +276,7 @@ export default {
     created() {
         this.getQuestion()
     }
-}
+})
 </script>
 
 <style lang="css" scoped>

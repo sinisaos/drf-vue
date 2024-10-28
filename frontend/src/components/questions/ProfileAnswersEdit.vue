@@ -55,8 +55,9 @@ import axios from "axios"
 import { useVuelidate } from "@vuelidate/core"
 import { required } from "@vuelidate/validators"
 import { mapGetters } from "vuex"
+import { defineComponent } from "vue"
 
-export default {
+export default defineComponent({
     setup() {
         return { v$: useVuelidate() }
     },
@@ -125,5 +126,5 @@ export default {
                 })
         }
     }
-}
+})
 </script>
