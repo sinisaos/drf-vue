@@ -49,6 +49,7 @@
                                 >
                             </div>
                         </div>
+                        <br />
                         <div class="form-group">
                             <button class="btn btn-primary">Submit</button>
                         </div>
@@ -79,7 +80,7 @@ export default defineComponent({
     },
     validations: {
         username: { required },
-        password: { required, minLength: minLength(4) }
+        password: { required, minLength: minLength(8) }
     },
     methods: {
         login() {

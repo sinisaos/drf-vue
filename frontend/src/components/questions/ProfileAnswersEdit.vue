@@ -21,13 +21,13 @@
                                 class="form-control"
                                 rows="5"
                                 max-rows="10"
-                                :class="{ 'is-invalid': $v.content.$error }"
+                                :class="{ 'is-invalid': v$.content.$error }"
                             ></b-form-textarea>
                             <div
-                                v-if="$v.content.$error"
+                                v-if="v$.content.$error"
                                 class="invalid-feedback"
                             >
-                                <span v-if="!$v.content.required"
+                                <span v-if="!v$.content.required"
                                     >Content is required</span
                                 >
                             </div>
@@ -40,6 +40,7 @@
                                 :value="token"
                             />
                         </div>
+                        <br />
                         <div class="form-group">
                             <button class="btn btn-primary">Submit</button>
                         </div>
@@ -72,8 +73,10 @@ export default defineComponent({
             showMessage: false
         }
     },
-    validations: {
-        content: { required }
+    validations() {
+        return {
+            content: { required }
+        }
     },
     computed: {
         ...mapGetters(["authUser"])
@@ -93,7 +96,6 @@ export default defineComponent({
                     this.answers = res.data.results
                 })
                 .catch((error) => {
-                    // eslint-disable-next-line
                     console.error(error)
                 })
         },
@@ -102,8 +104,8 @@ export default defineComponent({
             let data = {
                 content: this.content
             }
-            this.$v.$touch()
-            if (this.$v.$invalid) {
+            this.v$.$touch()
+            if (this.v$.$invalid) {
                 return
             }
             axios

@@ -1,5 +1,10 @@
 import { createStore } from 'vuex'
+import VuexPersistence from 'vuex-persist'
 import axios from 'axios'
+
+const vuexLocal = new VuexPersistence({
+    storage: window.localStorage
+})
 
 
 const store = createStore({
@@ -127,6 +132,7 @@ const store = createStore({
         isLoggedIn: state => !!state.token,
         authStatus: state => state.status,
     },
+    plugins: [vuexLocal.plugin]
 })
 
 export default store

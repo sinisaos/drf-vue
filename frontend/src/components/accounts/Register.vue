@@ -104,6 +104,7 @@
                                 >
                             </div>
                         </div>
+                        <br />
                         <div class="form-group">
                             <button class="btn btn-primary">Register</button>
                         </div>
@@ -145,12 +146,10 @@ export default defineComponent({
             }
         }
     },
-    computed: {
+    methods: {
         convertMessage(value) {
             return value.toString()
-        }
-    },
-    methods: {
+        },
         register() {
             let data = {
                 username: this.username,

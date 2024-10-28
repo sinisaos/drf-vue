@@ -43,7 +43,7 @@
                 </h4>
                 <span>
                     asked on
-                    <i>{{ dateFormat(item.created) }}</i> by
+                    <i>{{ formatDate(item.created) }}</i> by
                     <b>{{ item.question_author }}</b>
                     <b></b>
                 </span>
@@ -142,25 +142,17 @@
         <div class="col-md-8 offset-md-2" v-else>
             <h3>No results.</h3>
         </div>
-        <div class="vld-parent">
-            <loading
-                :active="isLoading"
-                :is-full-page="fullPage"
-                :opacity="1"
-            ></loading>
-        </div>
     </div>
 </template>
 
 <script>
 import axios from "axios"
+import dayjs from "dayjs"
 import { defineComponent } from "vue"
 
 export default defineComponent({
     data() {
         return {
-            isLoading: true,
-            fullPage: true,
             empty: true,
             query: null,
             orderingId: false,
@@ -171,13 +163,12 @@ export default defineComponent({
             questions: []
         }
     },
-    computed: {
-        dateFormat(value) {
-            let date = new Date(value)
-            return date.toString().slice(4, 24)
-        }
-    },
+
     methods: {
+        formatDate(dateString) {
+            const date = dayjs(dateString)
+            return date.format("dddd MMMM D, YYYY")
+        },
         getQuestions() {
             if (!this.query) {
                 axios
@@ -185,14 +176,12 @@ export default defineComponent({
                     .then((res) => {
                         this.questions = res.data.results
                         this.total = res.data.count
-                        this.isLoading = false
                         this.orderingId = false
                         this.orderingViews = false
                         this.orderingLikes = false
                     })
                     .catch((error) => {
                         console.error(error)
-                        this.isLoading = false
                     })
             } else {
                 axios
@@ -208,12 +197,10 @@ export default defineComponent({
                         this.orderingId = false
                         this.orderingViews = false
                         this.orderingLikes = false
-                        this.isLoading = false
                     })
                     .catch((error) => {
                         this.questions = []
                         console.log(error.response.data)
-                        this.isLoading = false
                     })
             }
         },
@@ -224,14 +211,12 @@ export default defineComponent({
                     .then((res) => {
                         this.questions = res.data.results
                         this.total = res.data.count
-                        this.isLoading = false
                         this.orderingId = true
                         this.orderingViews = false
                         this.orderingLikes = false
                     })
                     .catch((error) => {
                         console.error(error)
-                        this.isLoading = false
                     })
             } else {
                 axios
@@ -244,7 +229,6 @@ export default defineComponent({
                     .then((res) => {
                         this.questions = res.data.results
                         this.total = res.data.count
-                        this.isLoading = false
                         this.orderingId = true
                         this.orderingViews = false
                         this.orderingLikes = false
@@ -252,7 +236,6 @@ export default defineComponent({
                     .catch((error) => {
                         this.questions = []
                         console.log(error.response.data)
-                        this.isLoading = false
                     })
             }
         },
@@ -263,14 +246,12 @@ export default defineComponent({
                     .then((res) => {
                         this.questions = res.data.results
                         this.total = res.data.count
-                        this.isLoading = false
                         this.orderingId = false
                         this.orderingViews = true
                         this.orderingLikes = false
                     })
                     .catch((error) => {
                         console.error(error)
-                        this.isLoading = false
                     })
             } else {
                 axios
@@ -283,7 +264,6 @@ export default defineComponent({
                     .then((res) => {
                         this.questions = res.data.results
                         this.total = res.data.count
-                        this.isLoading = false
                         this.orderingId = false
                         this.orderingViews = true
                         this.orderingLikes = false
@@ -291,7 +271,6 @@ export default defineComponent({
                     .catch((error) => {
                         this.questions = []
                         console.log(error.response.data)
-                        this.isLoading = false
                     })
             }
         },
@@ -302,14 +281,12 @@ export default defineComponent({
                     .then((res) => {
                         this.questions = res.data.results
                         this.total = res.data.count
-                        this.isLoading = false
                         this.orderingId = false
                         this.orderingViews = false
                         this.orderingLikes = true
                     })
                     .catch((error) => {
                         console.error(error)
-                        this.isLoading = false
                     })
             } else {
                 axios
@@ -322,7 +299,6 @@ export default defineComponent({
                     .then((res) => {
                         this.questions = res.data.results
                         this.total = res.data.count
-                        this.isLoading = false
                         this.orderingId = false
                         this.orderingViews = false
                         this.orderingLikes = true
@@ -330,7 +306,6 @@ export default defineComponent({
                     .catch((error) => {
                         this.questions = []
                         console.log(error.response.data)
-                        this.isLoading = false
                     })
             }
         }

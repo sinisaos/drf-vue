@@ -13,14 +13,6 @@
                 </router-link>
             </div>
         </div>
-        <div class="vld-parent">
-            <loading
-                :active="isLoading"
-                :can-cancel="true"
-                :on-cancel="onCancel"
-                :is-full-page="fullPage"
-            ></loading>
-        </div>
     </div>
 </template>
 
@@ -29,14 +21,8 @@ import axios from "axios"
 import { defineComponent } from "vue"
 
 export default defineComponent({
-    // setup() {
-    //     const isLoading = ref(false)
-    //     const fullPage = ref(true)
-    // },
     data() {
         return {
-            isLoading: true,
-            fullPage: true,
             tags: []
         }
     },
@@ -46,11 +32,9 @@ export default defineComponent({
                 .get("/api/categories")
                 .then((res) => {
                     this.tags = res.data
-                    this.isLoading = false
                 })
                 .catch((error) => {
                     console.error(error)
-                    this.isLoading = false
                 })
         }
     },

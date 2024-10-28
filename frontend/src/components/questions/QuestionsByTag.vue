@@ -21,7 +21,7 @@
             </h4>
             <span>
                 asked on
-                <i>{{ dateFormat(item.created) }}</i> by
+                <i>{{ formatDate(item.created) }}</i> by
                 <b>{{ item.question_author }}</b>
                 <b></b>
             </span>
@@ -39,37 +39,27 @@
                 @input="getQuestions(currentPage)"
             ></b-pagination>
         </div>
-        <div class="vld-parent">
-            <loading
-                :active="isLoading"
-                :is-full-page="fullPage"
-                :opacity="1"
-            ></loading>
-        </div>
     </div>
 </template>
 
 <script>
 import axios from "axios"
+import dayjs from "dayjs"
 import { defineComponent } from "vue"
 
 export default defineComponent({
     data() {
         return {
-            isLoading: true,
-            fullPage: true,
             currentPage: 1,
             total: 0,
             questions: []
         }
     },
-    computed: {
-        dateFormat(value) {
-            let date = new Date(value)
-            return date.toString().slice(4, 24)
-        }
-    },
     methods: {
+        formatDate(dateString) {
+            const date = dayjs(dateString)
+            return date.format("dddd MMMM D, YYYY")
+        },
         getQuestions() {
             axios
                 .get(
@@ -81,11 +71,9 @@ export default defineComponent({
                 .then((res) => {
                     this.questions = res.data.results
                     this.total = res.data.count
-                    this.isLoading = false
                 })
                 .catch((error) => {
                     console.error(error)
-                    this.isLoading = false
                 })
         }
     },

@@ -41,7 +41,7 @@
                                 <td>
                                     <p>{{ item.content.slice(0, 20) }}...</p>
                                 </td>
-                                <td>{{ dateFormat(item.created) }}</td>
+                                <td>{{ item.created }}</td>
                                 <td>{{ item.views }}</td>
                                 <td>{{ item.likes }}</td>
                                 <td>
@@ -69,6 +69,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    <br />
                     <b-pagination
                         size="sm"
                         :total-rows="total"
@@ -105,12 +106,7 @@ export default defineComponent({
         }
     },
     computed: {
-        ...mapGetters(["authUser"]),
-
-        dateFormat(value) {
-            let date = new Date(value)
-            return date.toString().slice(0, 24)
-        }
+        ...mapGetters(["authUser"])
     },
     methods: {
         getQuestions() {

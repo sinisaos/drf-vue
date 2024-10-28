@@ -17,10 +17,10 @@
                                 id="title"
                                 name="title"
                                 class="form-control"
-                                :class="{ 'is-invalid': $v.title.$error }"
+                                :class="{ 'is-invalid': v$.title.$error }"
                             />
                             <div
-                                v-if="!$v.title.required"
+                                v-if="!v$.title.required"
                                 class="invalid-feedback"
                             >
                                 Title is required
@@ -35,13 +35,13 @@
                                 class="form-control"
                                 rows="5"
                                 max-rows="10"
-                                :class="{ 'is-invalid': $v.content.$error }"
+                                :class="{ 'is-invalid': v$.content.$error }"
                             ></b-form-textarea>
                             <div
-                                v-if="$v.content.$error"
+                                v-if="v$.content.$error"
                                 class="invalid-feedback"
                             >
-                                <span v-if="!$v.content.required"
+                                <span v-if="!v$.content.required"
                                     >Content is required</span
                                 >
                             </div>
@@ -54,13 +54,13 @@
                                 id="tags"
                                 name="tags"
                                 class="form-control"
-                                :class="{ 'is-invalid': $v.tags.$error }"
+                                :class="{ 'is-invalid': v$.tags.$error }"
                             />
-                            <div v-if="$v.tags.$error" class="invalid-feedback">
-                                <span v-if="!$v.tags.required"
+                            <div v-if="v$.tags.$error" class="invalid-feedback">
+                                <span v-if="!v$.tags.required"
                                     >Tags is required</span
                                 >
-                                <span v-if="!$v.tags.required"
+                                <span v-if="!v$.tags.required"
                                     >Tags is required</span
                                 >
                             </div>
@@ -73,6 +73,7 @@
                                 :value="authUser.username"
                             />
                         </div>
+                        <br />
                         <div class="form-group">
                             <button class="btn btn-primary">Submit</button>
                         </div>
@@ -105,10 +106,12 @@ export default defineComponent({
             showMessage: false
         }
     },
-    validations: {
-        title: { required },
-        content: { required },
-        tags: { required }
+    validations() {
+        return {
+            title: { required },
+            content: { required },
+            tags: { required }
+        }
     },
     computed: {
         ...mapGetters(["isLoggedIn", "authUser"])
@@ -121,8 +124,8 @@ export default defineComponent({
                 content: this.content,
                 tags: this.tags.split(/(?:,| )+/)
             }
-            this.$v.$touch()
-            if (this.$v.$invalid) {
+            this.v$.$touch()
+            if (this.v$.$invalid) {
                 return
             }
             axios
